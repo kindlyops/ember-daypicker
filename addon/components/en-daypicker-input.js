@@ -1,6 +1,5 @@
 import Component from "@ember/component"
 import { get, computed } from "@ember/object"
-import { run } from "@ember/runloop"
 import { isEmpty } from "@ember/utils"
 import { assert } from "@ember/debug"
 
@@ -49,17 +48,13 @@ You passed in ${date}, which is invalid, so we're defaulting to today's date`)
 
   actions: {
     focus() {
-      run(() => {
-        this.set("isFocused", true)
-        this.attrs["on-focus"]
-      })
+      this.set("isFocused", true)
+      this["on-focus"]
     },
 
     didSelect(date) {
-      run(() => {
-        this.set("isFocused", false)
-        this.attrs["on-select"](date)
-      })
+      this.set("isFocused", false)
+      this["on-select"](date)
     }
   }
 })

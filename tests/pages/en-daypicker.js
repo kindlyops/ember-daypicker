@@ -9,7 +9,6 @@ import {
 } from 'ember-cli-page-object';
 
 export default create({
-
   month: text('.en-daypicker-meta-month'),
   year:  text('.en-daypicker-meta-year option:selected'),
 

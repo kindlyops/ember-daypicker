@@ -1,103 +1,98 @@
+import { find, focus, render } from '@ember/test-helpers';
 import moment from 'moment'
-import { find, focus } from 'ember-native-dom-helpers'
-import { moduleForComponent, test } from 'ember-qunit'
-import wait from 'ember-test-helpers/wait'
+import { module, test } from 'qunit';
+import { setupRenderingTest } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile'
-import { run } from '@ember/runloop'
 
-moduleForComponent(
-  'en-daypicker-input',
-  'Integration | Component | en daypicker input',
-  {
-    integration: true
-  }
-)
+module('Integration | Component | en daypicker input', function(hooks) {
+  setupRenderingTest(hooks);
 
-test('it shows the datepicker when the input gets focus', function(assert) {
-  let today = moment()
-  this.set('today', today)
-  this.on('on-select', () => null)
+  hooks.beforeEach(function() {
+    this.actions = {};
+    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
+  });
 
-  this.render(hbs`{{en-daypicker-input
-              date=today
-              on-select=(action "on-select")}}`)
+  test('it shows the datepicker when the input gets focus', async function(assert) {
+    let today = moment()
+    this.set('today', today)
+    this.actions['on-select'] = () => null
 
-  assert.dom('.en-day-picker').doesNotExist("doesn't have datepicker by default")
+    await render(hbs`{{en-daypicker-input
+                date=today
+                on-select=(action "on-select")}}`)
 
-  run(async () => {
+    assert.dom('.en-day-picker').doesNotExist("doesn't have datepicker by default")
+
     await focus('input')
-  })
-
-  return wait().then(() => {
     assert.dom('.en-day-picker').exists('has datepicker when input is focused')
   })
-})
 
-test('the date has MMM D format by default', function(assert) {
-  let today = moment()
-  this.set('today', today)
-  this.on('on-select', () => null)
+  test('the date has MMM D format by default', async function(assert) {
+    let today = moment()
+    this.set('today', today)
+    this.actions['on-select'] = () => null
 
-  this.render(hbs`{{en-daypicker-input
-              date=today
-              on-select=(action "on-select")}}`)
+    await render(hbs`{{en-daypicker-input
+                date=today
+                on-select=(action "on-select")}}`)
 
-  assert.equal(find('input').value, today.format('MMM D'))
-})
-
-test('the date works with other formats', function(assert) {
-  let today = moment()
-  let format = 'MMM D, YYY'
-
-  this.set('today', today)
-  this.set('format', format)
-  this.on('on-select', () => null)
-
-  this.render(hbs`{{en-daypicker-input
-              date=today
-              format=format
-              on-select=(action "on-select")}}`)
-
-  assert.equal(find('input').value, today.format(format))
-
-  format = 'X'
-  this.set('format', format)
-
-  assert.equal(find('input').value, today.format(format))
-
-  format = 'MMM DD, YYYY hh:mm ss Z'
-  this.set('format', format)
-
-  assert.equal(find('input').value, today.format(format))
-})
-
-test('placeholder works', function(assert) {
-  let today = moment()
-
-  this.set('today', today)
-  this.on('on-select', () => null)
-
-  this.render(hbs`{{en-daypicker-input
-              date=today
-              placeholder="Choose a date..."
-              on-select=(action "on-select")}}`)
-
-  assert.equal(find('input').getAttribute('placeholder'), 'Choose a date...')
-})
-
-test('on selecting a date, it sends the on-select action', function(assert) {
-  assert.expect(1)
-
-  let today = moment()
-  this.set('today', today)
-  this.on('on-select', date => {
-    assert.ok(moment.isMoment(date), 'got a moment object')
+    assert.equal(find('input').value, today.format('MMM D'))
   })
 
-  this.render(hbs`{{en-daypicker-input
-              date=today
-              isFocused=true
-              on-select=(action "on-select")}}`)
+  test('the date works with other formats', async function(assert) {
+    let today = moment()
+    let format = 'MMM D, YYY'
 
-  this.$('.en-daypicker-day').not('.is-disabled').last().click()
-})
+    this.set('today', today)
+    this.set('format', format)
+    this.actions['on-select'] = () => null
+
+    await render(hbs`{{en-daypicker-input
+                date=today
+                format=format
+                on-select=(action "on-select")}}`)
+
+    assert.equal(find('input').value, today.format(format))
+
+    format = 'X'
+    this.set('format', format)
+
+    assert.equal(find('input').value, today.format(format))
+
+    format = 'MMM DD, YYYY hh:mm ss Z'
+    this.set('format', format)
+
+    assert.equal(find('input').value, today.format(format))
+  })
+
+  test('placeholder works', async function(assert) {
+    let today = moment()
+
+    this.set('today', today)
+    this.actions['on-select'] = () => null
+
+    await render(hbs`{{en-daypicker-input
+                date=today
+                placeholder="Choose a date..."
+                on-select=(action "on-select")}}`)
+
+    assert.equal(find('input').getAttribute('placeholder'), 'Choose a date...')
+  })
+
+  test('on selecting a date, it sends the on-select action', async function(assert) {
+    assert.expect(1)
+
+    let today = moment()
+    this.set('today', today)
+    this.actions['on-select'] = date => {
+      assert.ok(moment.isMoment(date), 'got a moment object')
+    }
+
+    await render(hbs`{{en-daypicker-input
+                date=today
+                isFocused=true
+                on-select=(action "on-select")}}`)
+
+    this.$('.en-daypicker-day').not('.is-disabled').last().click()
+  })
+});
