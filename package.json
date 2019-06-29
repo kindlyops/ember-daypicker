@@ -1,6 +1,6 @@
 {
   "name": "ember-daypicker",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "A simple daypicker addon for ember.js with zero external dependencies.",
   "keywords": [
     "ember-addon",
