@@ -9,7 +9,8 @@ external datepicker libraries. There's basic keyboard support, too.
 
 [Here's an introduction to it (with examples)](http://swastik.github.io/ember-daypicker/).
 
-## Installation
+* Ember.js v2.18 or above
+* Ember CLI v2.13 or above
 
 `ember install ember-daypicker`
 
