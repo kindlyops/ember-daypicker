@@ -30,7 +30,7 @@ test('it renders with the initial date value', function(assert) {
   this.set('nextMonth', nextMonth)
 
   daypicker
-    .render(hbs`{{en-daypicker 
+    .render(hbs`{{en-daypicker
               date=nextMonth}}`);
 
   assert.equal(daypicker.month, nextMonth.format("MMMM"))
@@ -43,7 +43,7 @@ test('it renders the right dates', function(assert) {
   let today = moment()
   this.set('today', today)
 
-  daypicker.render(hbs`{{en-daypicker 
+  daypicker.render(hbs`{{en-daypicker
               date=today}}`);
 
   const daysCount    = today.daysInMonth()
@@ -61,7 +61,7 @@ test('it has the right today', function(assert) {
   let today = moment()
   this.set('today', today)
 
-  daypicker.render(hbs`{{en-daypicker 
+  daypicker.render(hbs`{{en-daypicker
               date=today}}`);
 
   assert.ok(daypicker.hasToday)
@@ -74,7 +74,7 @@ test('when the date updates later, it updates the rest', function(assert) {
 
   this.set('nextMonth', nextMonth)
 
-  daypicker.render(hbs`{{en-daypicker 
+  daypicker.render(hbs`{{en-daypicker
               date=nextMonth}}`);
 
   assert.equal(daypicker.month, nextMonth.format("MMMM"))
@@ -97,7 +97,7 @@ test('when a date is clicked upon, it sends the on-select action', function(asse
     assert.ok(moment.isMoment(day), 'is a moment object')
   })
 
-  daypicker.render(hbs`{{en-daypicker 
+  daypicker.render(hbs`{{en-daypicker
               date=nextMonth
               on-select=(action "on-select")}}`);
 
@@ -118,13 +118,13 @@ test('when user hits next, it goes to the next date', function(assert) {
     assert.ok(moment(day).isSame(m("Sep 16, 2016")), "got the next day to focus")
   })
 
-  daypicker.render(hbs`{{en-daypicker 
+  daypicker.render(hbs`{{en-daypicker
               date=today
               on-select=(action "on-select")
               on-focus=(action "on-focus")}}`);
 
   daypicker.days(0).next()
-  
+
   return wait()
 });
 
@@ -140,7 +140,7 @@ test('when user hits prev, it goes to the previous date', function(assert) {
     assert.ok(moment(day).isSame(m("Sep 14, 2016")), "got the pevious day to focus")
   })
 
-  daypicker.render(hbs`{{en-daypicker 
+  daypicker.render(hbs`{{en-daypicker
               date=today
               on-select=(action "on-select")
               on-focus=(action "on-focus")}}`);
@@ -160,7 +160,7 @@ test('when user hits up, it goes to the previous week', function(assert) {
     assert.ok(moment(day).isSame(m("Sep 8, 2016"), "got the pevious week to focus"))
   })
 
-  daypicker.render(hbs`{{en-daypicker 
+  daypicker.render(hbs`{{en-daypicker
               date=today
               on-select=(action "on-select")
               on-focus=(action "on-focus")}}`);
@@ -180,7 +180,7 @@ test('when user hits down, it goes to the next week', function(assert) {
     assert.ok(moment(day).isSame(m("Sep 22, 2016"), "got the next week to focus"))
   })
 
-  daypicker.render(hbs`{{en-daypicker 
+  daypicker.render(hbs`{{en-daypicker
               date=today
               on-select=(action "on-select")
               on-focus=(action "on-focus")}}`);

@@ -1,96 +1,98 @@
-import Ember from 'ember';
-import Constants from 'ember-daypicker/utils/constants';
+import Mixin from '@ember/object/mixin'
+import { run } from '@ember/runloop'
+import Constants from 'ember-daypicker/utils/constants'
 import moment from 'moment'
 
-const { Mixin, run, $ } = Ember
-
 export default Mixin.create({
-  focusSelected () {
-    const selected = this.$('.is-selected')
+  focusSelected() {
+    const selected = this.element.querySelector('.is-selected')
 
     if (selected) {
       run.next(() => selected.focus())
     }
   },
 
-  keyDown (ev) {
-    run.later(() => this.handleKeyDown(ev), 1)
+  keyDown(ev) {
+    this._super(...arguments)
+    this.handleKeyDown(ev)
   },
 
-  handleKeyDown (ev) {
-    const focused = $('.en-daypicker-day:focus')
-    const selected = $('.en-daypicker-day.is-selected')
+  handleKeyDown(ev) {
+    const focused = this.element.querySelector('.en-daypicker-day')
+    const selected = this.element.querySelector('.en-daypicker-day.is-selected')
 
     let el = focused
 
-    if (!focused || !focused.length) {
+    if (document.activeElement !== focused || !document.hasFocus()) {
       el = selected
     }
 
-    const key   = ev.which || ev.keyCode
-    const label = el.attr('aria-label')
-    const day   = moment(label, Constants.defaultFormat)
+    const key = ev.which || ev.keyCode
+    const label = el.getAttribute('aria-label')
+    const day = moment(label, Constants.defaultFormat)
 
     switch (key) {
       case 37:
         this.focusPreviousDay(day)
-        break;
+        break
 
       case 38:
         this.focusPreviousWeek(day)
-        break;
+        break
 
       case 39:
         this.focusNextDay(day)
-        break;
+        break
 
       case 40:
         this.focusNextWeek(day)
-        break;
+        break
 
       case 13:
         this.selectFocused(focused)
-        break;
+        break
 
       default:
         return
     }
   },
 
-  focusPreviousDay (day) {
+  focusPreviousDay(day) {
     const prev = day.subtract(1, 'day')
     this.focusOn(prev)
   },
 
-  focusNextDay (day) {
+  focusNextDay(day) {
     const next = day.add(1, 'day')
     this.focusOn(next)
   },
 
-  focusPreviousWeek (day) {
+  focusPreviousWeek(day) {
     const prev = day.subtract(7, 'days')
     this.focusOn(prev)
   },
 
-  focusNextWeek (day) {
+  focusNextWeek(day) {
     const next = day.add(7, 'days')
     this.focusOn(next)
   },
 
-  focusOn (day) {
+  focusOn(day) {
     const formatted = day.format(Constants.defaultFormat)
-    const dayDiv = this.$(`.en-daypicker-day[aria-label="${formatted}"]`)
+    const dayDiv = Array
+      .from(this.element.querySelectorAll('.en-daypicker-day'))
+      .find(node => node.getAttribute('aria-label') === formatted)
 
-    if (dayDiv && !dayDiv.hasClass('is-disabled')) {
+    if (dayDiv && !dayDiv.classList.contains('is-disabled')) {
       dayDiv.focus()
 
-      if (this.attrs['on-focus']) {
-        this.attrs['on-focus'](formatted)
+      if (this['on-focus']) {
+        this['on-focus'](formatted)
       }
     }
   },
 
-  selectFocused (focused) {
+  selectFocused(focused) {
     focused.click()
   }
-});
+})
